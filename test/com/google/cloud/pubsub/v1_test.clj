@@ -1,6 +1,6 @@
-(ns cloud-pubsub-batch-publisher.core-test
+(ns com.google.cloud.pubsub.v1-test
   (:require [clojure.test :refer :all]
-            [cloud-pubsub-batch-publisher.core :refer :all])
+            [com.google.cloud.pubsub.v1 :refer :all])
   (:import [com.google.cloud.pubsub.v1 BatchPublisher]))
 
 (deftest utils

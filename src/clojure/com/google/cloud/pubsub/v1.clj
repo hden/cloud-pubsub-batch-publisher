@@ -1,9 +1,9 @@
-(ns cloud-pubsub-batch-publisher.core
+(ns com.google.cloud.pubsub.v1
   (:import [com.google.api.core ApiFuture]
            [com.google.pubsub.v1 PublishRequest]
            [com.google.cloud.pubsub.v1 Publisher Publisher$Builder])
   (:gen-class
-    :name com.google.cloud.pubsub.v1.BatchPublisher
+    :name com.google.pubsub.v1.BatchPublisher
     :extends com.google.cloud.pubsub.v1.Publisher
     :init init
     :constructors {[String] [com.google.cloud.pubsub.v1.Publisher$Builder]}
