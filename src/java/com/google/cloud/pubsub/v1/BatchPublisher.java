@@ -76,7 +76,7 @@ import org.threeten.bp.Duration;
  * <p>{@link Publisher} will use the credentials set on the channel, which uses application default
  * credentials through {@link GoogleCredentials#getApplicationDefault} by default.
  */
-public class PublicPublisher {
+public class BatchPublisher {
   private static final Logger logger = Logger.getLogger(Publisher.class.getName());
 
   private final String topicName;
@@ -108,7 +108,7 @@ public class PublicPublisher {
     return 10L * 1000L * 1000L; // 10 megabytes (https://en.wikipedia.org/wiki/Megabyte)
   }
 
-  public PublicPublisher(Builder builder) throws IOException {
+  public BatchPublisher(Builder builder) throws IOException {
     topicName = builder.topicName;
 
     this.batchingSettings = builder.batchingSettings;
@@ -163,6 +163,22 @@ public class PublicPublisher {
   /** Topic which the publisher publishes to. */
   public String getTopicNameString() {
     return topicName;
+  }
+
+  /**
+   * Publishes list of messages atomically.
+   * https://github.com/googleapis/google-cloud-java/pull/4285
+   */
+  public ApiFuture<PublishResponse> publish(List<PubsubMessage> messageList) {
+    Preconditions.checkArgument(messageList != null && messageList.size() > 0, "messageList can not be null or 0 size");
+    PublishRequest publishRequest = PublishRequest.newBuilder().setTopic(topicName).addAllMessages(messageList).build();
+    return publisherStub.publishCallable().futureCall(publishRequest);
+  }
+
+  public ApiFuture<PublishResponse> publish(String topicName, List<PubsubMessage> messageList) {
+    Preconditions.checkArgument(messageList != null && messageList.size() > 0, "messageList can not be null or 0 size");
+    PublishRequest publishRequest = PublishRequest.newBuilder().setTopic(topicName).addAllMessages(messageList).build();
+    return publisherStub.publishCallable().futureCall(publishRequest);
   }
 
   /**
@@ -633,8 +649,8 @@ public class PublicPublisher {
       return this;
     }
 
-    public PublicPublisher build() throws IOException {
-      return new PublicPublisher(this);
+    public BatchPublisher build() throws IOException {
+      return new BatchPublisher(this);
     }
   }
 }
