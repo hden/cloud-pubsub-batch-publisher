@@ -76,7 +76,7 @@ import org.threeten.bp.Duration;
  * <p>{@link Publisher} will use the credentials set on the channel, which uses application default
  * credentials through {@link GoogleCredentials#getApplicationDefault} by default.
  */
-public class Publisher {
+public class PublicPublisher {
   private static final Logger logger = Logger.getLogger(Publisher.class.getName());
 
   private final String topicName;
@@ -108,7 +108,7 @@ public class Publisher {
     return 10L * 1000L * 1000L; // 10 megabytes (https://en.wikipedia.org/wiki/Megabyte)
   }
 
-  public Publisher(Builder builder) throws IOException {
+  public PublicPublisher(Builder builder) throws IOException {
     topicName = builder.topicName;
 
     this.batchingSettings = builder.batchingSettings;
@@ -633,8 +633,8 @@ public class Publisher {
       return this;
     }
 
-    public Publisher build() throws IOException {
-      return new Publisher(this);
+    public PublicPublisher build() throws IOException {
+      return new PublicPublisher(this);
     }
   }
 }

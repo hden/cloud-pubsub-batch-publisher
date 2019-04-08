@@ -3,7 +3,7 @@
            [com.google.pubsub.v1 PublishRequest]
            [com.google.cloud.pubsub.v1 Publisher Publisher$Builder])
   (:gen-class
-    :name com.google.pubsub.v1.BatchPublisher
+    :name com.google.cloud.pubsub.v1.BatchPublisher
     :extends com.google.cloud.pubsub.v1.Publisher
     :init init
     :constructors {[String] [com.google.cloud.pubsub.v1.Publisher$Builder]}

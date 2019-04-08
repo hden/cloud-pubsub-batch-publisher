@@ -5,8 +5,8 @@
             :url "https://www.eclipse.org/legal/epl-2.0/"}
   :dependencies [[org.clojure/clojure "1.10.0"]
                  [com.google.cloud/google-cloud-pubsub "1.69.0"]]
-  :repl-options {:init-ns cloud-pubsub-batch-publisher.core}
+  :repl-options {:init-ns com.google.cloud.pubsub.v1}
   :source-paths      ["src/clojure"]
   :java-source-paths ["src/java"]
-  :aot [cloud-pubsub-batch-publisher.core]
+  :aot [com.google.cloud.pubsub.v1]
   :profiles {:uberjar {:aot :all}})
