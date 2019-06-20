@@ -4,6 +4,6 @@
   :license {:name "Apache-2.0"
             :url "https://www.apache.org/licenses/LICENSE-2.0.html"}
   :dependencies [[org.clojure/clojure "1.10.0"]
-                 [com.google.cloud/google-cloud-pubsub "1.69.0"]]
+                 [com.google.cloud/google-cloud-pubsub "1.78.0"]]
   :java-source-paths ["src/java"]
   :profiles {:uberjar {:aot :all}})

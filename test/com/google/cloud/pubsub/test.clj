@@ -5,4 +5,4 @@
 (deftest batch-publisher
   (testing "constructor"
     (let [builder (BatchPublisher/newBuilder "topic")]
-      (is publisher (.build builder)))))
+      (is (.build builder)))))
