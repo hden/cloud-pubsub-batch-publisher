@@ -1,0 +1,5 @@
+{:linters
+ {:unresolved-symbol
+  {:exclude [(clojure.test/are [thrown? thrown-with-msg? thrown-with-data?])
+             (clojure.test/is [thrown? thrown-with-msg? thrown-with-data?])]}}
+ :lint-as {cloud-pubsub-batch-publisher.test-util/with-publisher clojure.core/let}}

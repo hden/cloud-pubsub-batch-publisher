@@ -17,6 +17,7 @@ pom.xml.asc
 .lein-failures
 .nrepl-port
 .cpcache/
+.clj-kondo/.cache/
 
 ### macOS ###
 # General
@@ -47,3 +48,5 @@ Temporary Items
 .apdisk
 
 # End of https://www.gitignore.io/api/macos,clojure
+credentials.json
+.env
