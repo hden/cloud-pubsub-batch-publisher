@@ -4,4 +4,4 @@ lint:
 	clj-kondo --parallel --lint src test
 
 test:
-	clojure -Adev:test:runner
+	lein test

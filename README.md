@@ -2,26 +2,28 @@
 
 A batch publisher for Google Cloud PubSub.
 
+## Installation
+
 ## Usage
 
 ```clj
-(import '[com.google.cloud.pubsub.v1 BatchPublisher])
+(require '[cloud-pubsub-batch-publisher.core :as pubsub])
 
-(defn create-publisher [default-topic]
-  (let [builder (BatchPublisher/newBuilder default-topic)]
-    (.build builder)))
+(def publisher (pubsub/publisher "TOPIC-NAME")
 
-(def publisher (create-publisher (format "projects/%s/topics/%s" project topic)))
+;; In a single publish request, all messages must have no ordering key
+;; or they must all have the same ordering key.
+;; See https://cloud.google.com/pubsub/docs/ordering
+(def messages
+  [{:message      "MESSAGE"       ;; String, required
+    :metadata     {"KEY" "VALUE"} ;; Map<String, String>, optional
+    :ordering-key "KEY"}])        ;; String, optional
 
-;; Publish to the default topic.
-(let [response @(.publish publisher messages)]
-  (.getMessageIdsList response))
+(pubsub/publish! publisher {:messages messages})
 
-;; Publish to another topic.
-(let [response @(.publish publisher "projects/project/topics/another-topic" messages)]
-  (.getMessageIdsList response))
+(pubsub/shutdown! publisher {:await-msec 1000})
 ```
 
 ## License
 
-Copyright © 2019 Haokang Den
+Copyright © 2021 Haokang Den

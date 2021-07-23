@@ -2,12 +2,16 @@
   (:require [clojure.test :refer [deftest is testing]]
             [cognitect.anomalies :as anomalies]
             [cloud-pubsub-batch-publisher.core :as core]
-            [cloud-pubsub-batch-publisher.test-util :as util]))
+            [cloud-pubsub-batch-publisher.test-util :as util]
+            [cuid.core :refer [cuid]]))
 
-(def messages
-  [{:message  "message-only"}
-   {:message  "message-with-metadata"
-    :metadata {"foo" "bar"}}])
+(defn generate-messages []
+  (let [key (cuid)]
+    [{:message      "message-only"
+      :ordering-key key}
+     {:message      "message-with-metadata"
+      :metadata     {"foo" "bar"}
+      :ordering-key key}]))
 
 (deftest core-tests
   (util/with-publisher [publisher (util/test-topic)]
@@ -15,7 +19,8 @@
       (is publisher))
 
     (testing "publish!"
-      (let [results (core/publish! publisher {:messages messages})]
+      (let [messages (generate-messages)
+            results (core/publish! publisher {:messages messages})]
         (is (coll? results))
         (is (= (count messages) (count results)))
         (is (every? string? results)))))
@@ -29,4 +34,4 @@
       (is (thrown-with-data?
             {::anomalies/category ::anomalies/fault
              ::anomalies/message  "Cannot publish on a shut-down publisher."}
-            (core/publish! publisher {:messages messages}))))))
+            (core/publish! publisher {:messages (generate-messages)}))))))

@@ -26,7 +26,7 @@
   (System/getenv "PUBSUB_TOPIC"))
 
 (defmacro with-publisher [[bound-var binding-expr] & body]
-  `(let [~bound-var (core/publisher ~binding-expr)]
+  `(let [~bound-var (core/publisher ~binding-expr {:enable-message-ordering true})]
      (try
        ~@body
        (finally (core/shutdown! ~bound-var {:await-msec 10})))))

@@ -7,4 +7,5 @@
                  [com.cognitect/anomalies "0.1.12"]
                  [com.google.cloud/google-cloud-pubsub "1.113.5"]]
   :profiles {:uberjar {:aot :all}
-             :dev {:plugins [[lein-dotenv "RELEASE"]]}})
+             :dev {:plugins [[lein-dotenv "RELEASE"]]
+                   :dependencies [[cuid/cuid "0.1.2"]]}})

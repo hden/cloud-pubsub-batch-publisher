@@ -21,12 +21,12 @@
     (. m (setAccessible true))
     (. m (get obj))))
 
-(defn- pubsub-message [{:keys [message metadata]
-                        :or {metadata {}}}]
+(defn- pubsub-message [{:keys [message metadata ordering-key]}]
   (let [builder (PubsubMessage/newBuilder)]
-    (doto builder
-      (.setData (ByteString/copyFromUtf8 message))
-      (.putAllAttributes metadata))
+    (cond-> builder
+      message (.setData (ByteString/copyFromUtf8 message))
+      metadata (.putAllAttributes metadata)
+      ordering-key (.setOrderingKey ordering-key))
     (.build builder)))
 
 (defn- pubsub-request [topic messages]
@@ -59,11 +59,20 @@
       (.awaitTermination publisher await-msec TimeUnit/MILLISECONDS))))
 
 ;; Public APIs
-(defn publisher [^String topic]
-  (let [p (.build (Publisher/newBuilder topic))
-        stub (private-field p "publisherStub")
-        shutdown (private-field p "shutdown")]
-    (->Boundary p stub topic shutdown)))
+(defn publisher
+  ([topic]
+   (publisher topic {}))
+  ([^String topic {:keys [enable-message-ordering]
+                   :or {enable-message-ordering true}}]
+   (let [p (cond-> (Publisher/newBuilder topic)
+             ;; In a single publish request, all messages must have no ordering key
+             ;; or they must all have the same ordering key.
+             ;; See https://cloud.google.com/pubsub/docs/ordering
+             enable-message-ordering (.setEnableMessageOrdering true)
+             true                    (.build))
+         stub (private-field p "publisherStub")
+         shutdown (private-field p "shutdown")]
+     (->Boundary p stub topic shutdown))))
 
 (defn publish!
   "Synchronously publish a collection of messages.
