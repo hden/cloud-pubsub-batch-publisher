@@ -1,7 +1,10 @@
 (ns cloud-pubsub-batch-publisher.core
   (:require [cognitect.anomalies :as anomalies])
   (:import
+    [java.io ByteArrayInputStream]
     [java.util.concurrent TimeUnit]
+    [com.google.api.gax.core FixedCredentialsProvider]
+    [com.google.auth.oauth2 ServiceAccountCredentials]
     [com.google.protobuf ByteString]
     [com.google.pubsub.v1 PublishRequest PubsubMessage]
     [com.google.cloud.pubsub.v1 Publisher]))
@@ -37,6 +40,11 @@
       (.addAllMessages message-list))
     (.build builder)))
 
+(defn- fixed-credentials-provider [^String s]
+  (let [stream (new ByteArrayInputStream (.getBytes s))
+        credentials (ServiceAccountCredentials/fromStream stream)]
+    (FixedCredentialsProvider/create credentials)))
+
 ;; Implementations
 (extend-protocol PublisherImpls
   Boundary
@@ -62,9 +70,10 @@
 (defn publisher
   ([topic]
    (publisher topic {}))
-  ([^String topic {:keys [enable-message-ordering]
+  ([^String topic {:keys [credentials enable-message-ordering]
                    :or {enable-message-ordering true}}]
    (let [p (cond-> (Publisher/newBuilder topic)
+             credentials (.setCredentialsProvider (fixed-credentials-provider credentials))
              ;; In a single publish request, all messages must have no ordering key
              ;; or they must all have the same ordering key.
              ;; See https://cloud.google.com/pubsub/docs/ordering
