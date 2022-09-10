@@ -48,7 +48,7 @@
 ;; Implementations
 (extend-protocol PublisherImpls
   Boundary
-  (publish-impl! [{:keys [publisher stub topic shutdown]} {:keys [messages]}]
+  (publish-impl! [{:keys [stub topic shutdown]} {:keys [messages]}]
     (when (.get shutdown)
       (throw (ex-info "Cannot publish on a shut-down publisher."
                       {::anomalies/category ::anomalies/fault
@@ -70,10 +70,15 @@
 (defn publisher
   ([topic]
    (publisher topic {}))
-  ([^String topic {:keys [credentials enable-message-ordering]
+  ([^String topic {:keys [channel-provider
+                          credentials
+                          credentials-provider
+                          enable-message-ordering]
                    :or {enable-message-ordering true}}]
    (let [p (cond-> (Publisher/newBuilder topic)
-             credentials (.setCredentialsProvider (fixed-credentials-provider credentials))
+             credentials             (.setCredentialsProvider (fixed-credentials-provider credentials))
+             credentials-provider    (.setCredentialsProvider credentials-provider)
+             channel-provider        (.setChannelProvider channel-provider)
              ;; In a single publish request, all messages must have no ordering key
              ;; or they must all have the same ordering key.
              ;; See https://cloud.google.com/pubsub/docs/ordering
