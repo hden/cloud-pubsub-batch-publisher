@@ -1,9 +1,11 @@
 (ns cloud-pubsub-batch-publisher.core-test
-  (:require [clojure.test :refer [deftest is testing]]
+  (:require [clojure.test :refer [deftest is testing use-fixtures]]
             [cognitect.anomalies :as anomalies]
             [cloud-pubsub-batch-publisher.core :as core]
             [cloud-pubsub-batch-publisher.test-util :as util]
             [cuid.core :refer [cuid]]))
+
+(use-fixtures :once util/shared-channel)
 
 (defn generate-messages []
   (let [key (cuid)]
@@ -14,7 +16,7 @@
       :ordering-key key}]))
 
 (deftest core-tests
-  (util/with-publisher [publisher (util/test-topic)]
+  (let [publisher (util/publisher)]
     (testing "test fixtures"
       (is publisher))
 
@@ -25,7 +27,7 @@
         (is (= (count messages) (count results)))
         (is (every? string? results)))))
 
-  (util/with-publisher [publisher (util/test-topic)]
+  (let [publisher (util/publisher)]
     (testing "shutdown!"
       (core/shutdown! publisher {:await-msec 10})
       (is (= true (.get (:shutdown publisher)))))
