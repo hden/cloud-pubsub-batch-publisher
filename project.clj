@@ -5,7 +5,7 @@
             :url "https://www.apache.org/licenses/LICENSE-2.0.html"}
   :dependencies [[org.clojure/clojure "1.11.1"]
                  [com.cognitect/anomalies "0.1.12"]
-                 [com.google.cloud/google-cloud-pubsub "1.120.13"]]
+                 [com.google.cloud/google-cloud-pubsub "1.138.0"]]
   :profiles {:uberjar {:aot :all}
              :dev {:plugins [[lein-dotenv "RELEASE"]]
                    :dependencies [[cuid/cuid "0.1.2"]]}})
