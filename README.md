@@ -1,4 +1,4 @@
-# cloud-pubsub-batch-publisher
+# cloud-pubsub-batch-publisher [![CircleCI](https://dl.circleci.com/status-badge/img/gh/hden/cloud-pubsub-batch-publisher/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/hden/cloud-pubsub-batch-publisher/tree/master)
 
 A batch publisher for Google Cloud PubSub.
 
