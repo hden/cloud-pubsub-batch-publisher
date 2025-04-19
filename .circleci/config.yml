@@ -4,7 +4,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/clojure:lein-2.9.8
+      - image: cimg/clojure:1.11
       - image: google/cloud-sdk:latest
         command: [gcloud, beta, emulators, pubsub, start, '--host-port=localhost:8085']
     working_directory: ~/repo
