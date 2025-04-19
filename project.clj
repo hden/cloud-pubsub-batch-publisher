@@ -1,4 +1,4 @@
-(defproject hden/cloud-pubsub-batch-publisher "1.1.0-SNAPSHOT"
+(defproject hden/cloud-pubsub-batch-publisher "1.1.0"
   :description "A batch publisher for Google Cloud PubSub."
   :url "https://github.com/hden/cloud-pubsub-batch-publisher"
   :license {:name "Apache-2.0"
