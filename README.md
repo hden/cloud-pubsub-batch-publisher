@@ -4,6 +4,10 @@ A batch publisher for Google Cloud PubSub.
 
 ## Installation
 
+```clj
+[hden/cloud-pubsub-batch-publisher "1.1.0"]
+```
+
 ## Usage
 
 ```clj
