@@ -1,6 +1,6 @@
 (ns cloud-pubsub-batch-publisher.emulator
   (:import
-    [io.grpc ManagedChannelBuilder]
+    [io.grpc ManagedChannelBuilder ManagedChannel]
     [com.google.api.gax.core NoCredentialsProvider]
     [com.google.api.gax.grpc GrpcTransportChannel]
     [com.google.api.gax.retrying RetrySettings]
@@ -82,12 +82,11 @@
 
    Example:
      (create-topic! context \"projects/test-project/topics/test-topic\")"
-  [topic {:keys [channel-provider credentials-provider]}]
-  (let [builder (TopicAdminSettings/newBuilder)]
-    (doto builder
-      (.setTransportChannelProvider channel-provider)
-      (.setCredentialsProvider credentials-provider)
-      (.. (createTopicSettings) (setRetrySettings retry-settings)))
+  [^String topic {:keys [channel-provider credentials-provider]}]
+  (let [builder (doto (TopicAdminSettings/newBuilder)
+                  (.setTransportChannelProvider channel-provider)
+                  (.setCredentialsProvider credentials-provider)
+                  (.. (createTopicSettings) (setRetrySettings retry-settings)))]
     (try
       (.. (TopicAdminClient/create (.build builder))
           (createTopic topic))
@@ -117,7 +116,7 @@
    Example:
      (context {:host \"localhost\" :port 8085})"
   [opts]
-  (let [channel (channel opts)]
+  (let [^ManagedChannel channel (channel opts)]
     {:channel channel
      :channel-provider (channel-provider channel)
      :credentials-provider (credentials-provider)}))
@@ -142,7 +141,7 @@
      (use-fixtures :once (create-fixture \"projects/test-project/topics/test-topic\" context))"
   [topic context]
   (fn [f]
-    (let [channel (:channel context)]
+    (let [^ManagedChannel channel (:channel context)]
       (try
         (create-topic! topic context)
         (f)

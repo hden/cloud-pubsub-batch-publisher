@@ -6,8 +6,12 @@
     [com.google.api.gax.core FixedCredentialsProvider]
     [com.google.auth.oauth2 ServiceAccountCredentials]
     [com.google.protobuf ByteString]
-    [com.google.pubsub.v1 PublishRequest PubsubMessage]
-    [com.google.cloud.pubsub.v1 Publisher]))
+    [com.google.pubsub.v1 PublishRequest PubsubMessage PublishResponse]
+    [com.google.cloud.pubsub.v1 Publisher]
+    [com.google.cloud.pubsub.v1.stub GrpcPublisherStub]
+    [com.google.api.core ApiFuture]
+    [java.util.concurrent.atomic AtomicBoolean]
+    [java.lang.reflect Field]))
 
 ;; ## Protocols & Records ##
 ;; You could mock the protocol for unit-tests
@@ -72,10 +76,10 @@
 
    Returns:
      The value of the private field"
-  [obj ^String field-name]
-  (let [m (.. obj getClass (getDeclaredField field-name))]
-    (. m (setAccessible true))
-    (. m (get obj))))
+  [^Object obj ^String field-name]
+  (let [^Field m (.. obj getClass (getDeclaredField field-name))]
+    (.setAccessible m true)
+    (.get m obj)))
 
 (defn- pubsub-message
   "Create a PubSub message from a map of attributes.
@@ -129,19 +133,19 @@
 ;; Implementations
 (extend-protocol PublisherImpls
   Boundary
-  (publish-impl! [{:keys [stub topic shutdown]} {:keys [messages]}]
+  (publish-impl! [{:keys [stub topic ^AtomicBoolean shutdown]} {:keys [messages]}]
     (when (.get shutdown)
       (throw (ex-info "Cannot publish on a shut-down publisher."
                       {::anomalies/category ::anomalies/fault
                        ::anomalies/message  "Cannot publish on a shut-down publisher."})))
     (when (seq messages)
       (let [request (pubsub-request topic messages)
-            response (-> stub
-                       (.publishCallable)
-                       (.futureCall request))]
-        (into [] (.getMessageIdsList @response)))))
+            ^ApiFuture response (-> ^GrpcPublisherStub stub
+                                  (.publishCallable)
+                                  (.futureCall request))]
+        (into [] (.getMessageIdsList ^PublishResponse @response)))))
 
-  (shutdown-impl! [{:keys [publisher shutdown]} {:keys [await-msec]}]
+  (shutdown-impl! [{:keys [^Publisher publisher ^AtomicBoolean shutdown]} {:keys [await-msec]}]
     (when-not (.get shutdown)
       (.shutdown publisher))
     (when await-msec
