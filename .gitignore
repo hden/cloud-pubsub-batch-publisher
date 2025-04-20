@@ -50,3 +50,5 @@ Temporary Items
 # End of https://www.gitignore.io/api/macos,clojure
 credentials.json
 .env
+.lsp
+.clj-kondo/cache
