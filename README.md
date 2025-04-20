@@ -14,7 +14,7 @@ A Clojure library for batch publishing messages to Google Cloud PubSub with supp
 Add the following dependency to your `project.clj` or `deps.edn`:
 
 ```clj
-[hden/cloud-pubsub-batch-publisher "1.1.1"]
+[hden/cloud-pubsub-batch-publisher "1.1.2-SNAPSHOT"]
 ```
 
 ## Usage

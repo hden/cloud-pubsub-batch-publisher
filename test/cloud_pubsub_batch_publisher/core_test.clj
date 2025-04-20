@@ -3,7 +3,8 @@
             [cognitect.anomalies :as anomalies]
             [cloud-pubsub-batch-publisher.core :as core]
             [cloud-pubsub-batch-publisher.emulator :as emulator]
-            [cuid.core :refer [cuid]]))
+            [cuid.core :refer [cuid]])
+  (:import [java.util.concurrent.atomic AtomicBoolean]))
 
 (def ^:const topic "projects/test-project/topics/test-topic")
 (def context (emulator/context {}))
@@ -50,7 +51,7 @@
   (let [publisher (core/publisher topic context)]
     (testing "shutdown!"
       (core/shutdown! publisher {:await-msec 10})
-      (is (= true (.get (:shutdown publisher)))))
+      (is (= true (.get ^AtomicBoolean (:shutdown publisher)))))
 
     (testing "publish! after shutdown!"
       (is (thrown-with-data?
