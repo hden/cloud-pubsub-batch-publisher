@@ -5,6 +5,6 @@
             :url "https://www.apache.org/licenses/LICENSE-2.0.html"}
   :dependencies [[org.clojure/clojure "1.12.0"]
                  [com.cognitect/anomalies "0.1.12"]
-                 [com.google.cloud/google-cloud-pubsub "1.138.0"]]
+                 [com.google.cloud/google-cloud-pubsub "1.123.14"]]
   :profiles {:dev {:dependencies [[cuid/cuid "0.1.2"]]
                    :global-vars {*warn-on-reflection* true}}})
