@@ -1,4 +1,4 @@
-(defproject hden/cloud-pubsub-batch-publisher "1.1.1"
+(defproject hden/cloud-pubsub-batch-publisher "1.1.2-SNAPSHOT"
   :description "A batch publisher for Google Cloud PubSub."
   :url "https://github.com/hden/cloud-pubsub-batch-publisher"
   :license {:name "Apache-2.0"
@@ -8,4 +8,6 @@
                  [com.google.cloud/google-cloud-pubsub "1.138.0"]]
   :profiles {:uberjar {:aot :all}
              :dev {:plugins [[lein-dotenv "RELEASE"]]
-                   :dependencies [[cuid/cuid "0.1.2"]]}})
+                   :dependencies [[cuid/cuid "0.1.2"]]}
+             :test {:jvm-opts ["-Dclojure.compiler.direct-linking=true"
+                               "-Dclojure.compiler.warn-on-reflection=true"]}})
