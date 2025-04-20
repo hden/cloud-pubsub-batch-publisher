@@ -6,8 +6,5 @@
   :dependencies [[org.clojure/clojure "1.12.0"]
                  [com.cognitect/anomalies "0.1.12"]
                  [com.google.cloud/google-cloud-pubsub "1.138.0"]]
-  :profiles {:uberjar {:aot :all}
-             :dev {:plugins [[lein-dotenv "RELEASE"]]
-                   :dependencies [[cuid/cuid "0.1.2"]]}
-             :test {:jvm-opts ["-Dclojure.compiler.direct-linking=true"
-                               "-Dclojure.compiler.warn-on-reflection=true"]}})
+  :profiles {:dev {:dependencies [[cuid/cuid "0.1.2"]]
+                   :global-vars {*warn-on-reflection* true}}})
